@@ -1,5 +1,5 @@
 import socket, sys, select
-from proxier import ProxyManager
+from .proxier import ProxyManager
 
 class ProxySocket(socket.socket):
     def __init__(self, proxy_fetcher, use_ssl=True, chainlength=0, DEBUG=False, family=socket.AF_INET, type=socket.SOCK_STREAM, proto=0, _sock=None):
@@ -24,10 +24,10 @@ class ProxySocket(socket.socket):
             if statuscode==200: 
                 return
             else:
-                print  "ERROR http respose from chain: connection returned %d" % statuscode
+                print("ERROR http respose from chain: connection returned %d" % statuscode)
                 self._proxy_fetcher.remove_proxy(proxy)
                 return
-        except ValueError, e:
+        except ValueError as e:
             sys.stdout.write( 'ERROR chaining: '+str(e) )
             sys.stdout.flush()
             self.close()

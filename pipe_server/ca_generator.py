@@ -17,7 +17,7 @@ class CertificateAuthority(object):
 
     def _get_serial(self):
         s = 1
-        for c in filter(lambda x: x.startswith('.pymp_'), listdir(self.cache_dir)):
+        for c in [x for x in listdir(self.cache_dir) if x.startswith('.pymp_')]:
             c = load_certificate(FILETYPE_PEM, open(path.sep.join([self.cache_dir, c])).read())
             sc = c.get_serial_number()
             if sc > s:

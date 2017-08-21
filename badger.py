@@ -1,5 +1,5 @@
 import argparse, sys, threading, cmd
-from pipe_server.server import ThreadedPipeServer
+from .pipe_server.server import ThreadedPipeServer
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--local_proxies', action='store_true')
@@ -14,9 +14,9 @@ proxy = ThreadedPipeServer(
             DEBUG = args.debug
         )
 try:
-    print "Server is running."
+    print("Server is running.")
     proxy.serve_forever()
-    print 'visible?'
+    print('visible?')
 except KeyboardInterrupt:
     sys.stdout.write("\nServer is shuting down. Please wait...")
     proxy.terminate()

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from SocketServer import ThreadingMixIn
-from handler import ProxiedRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
+from .handler import ProxiedRequestHandler
 from proxy.proxier import ProxyManager
-from ca_generator import CertificateAuthority
+from .ca_generator import CertificateAuthority
 
 class PipeServer(HTTPServer):
     def __init__(self, server_address=('', 8080), try_local_proxylist=True, chainlength=0, DEBUG=False):

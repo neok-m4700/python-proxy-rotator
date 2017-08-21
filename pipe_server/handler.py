@@ -1,6 +1,6 @@
-from BaseHTTPServer import BaseHTTPRequestHandler
-from urlparse import urlparse, urlunparse, ParseResult
-from httplib import HTTPResponse
+from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlparse, urlunparse, ParseResult
+from http.client import HTTPResponse
 import os, random
 from ssl import wrap_socket, PROTOCOL_TLSv1
 from socket import socket, timeout as TimeoutException
@@ -15,14 +15,14 @@ class ProxiedRequestHandler(BaseHTTPRequestHandler):
         self.DEBUG = server.DEBUG
         try: BaseHTTPRequestHandler.__init__(self, request, client_address, server)
         except Exception as e: 
-            if server.DEBUG: print e
+            if server.DEBUG: print(e)
     
     def _connect_to_host(self):
         if self.connect_through_ssl:
             self.hostname, self.port = self.path.split(':')
         else:
             u = urlparse(self.path)
-            if u.scheme != 'http': print 'ERROR Unknown request scheme: %s' % repr(u.scheme)
+            if u.scheme != 'http': print('ERROR Unknown request scheme: %s' % repr(u.scheme))
             self.hostname = u.hostname
             self.port = u.port or 80
             self.path = urlunparse( 
@@ -55,7 +55,7 @@ class ProxiedRequestHandler(BaseHTTPRequestHandler):
                                         ssl_version=PROTOCOL_TLSv1,
                                         ca_certs=os.path.join(os.getcwd(),'cacert.pem')
                                     )
-        except Exception, e:
+        except Exception as e:
             self.send_error(500, str(e))
             return
         
@@ -68,11 +68,11 @@ class ProxiedRequestHandler(BaseHTTPRequestHandler):
         if not self.connect_through_ssl:
             try:
                 self._connect_to_host()
-            except TimeoutException, e:
+            except TimeoutException as e:
                 if retried: self.send_error(504, "Gateway Timeout")
                 else: self.do_RELAY(True)
                 return
-            except Exception, e:
+            except Exception as e:
                 self.send_error(500, str(e))
                 return
 
@@ -94,8 +94,8 @@ class ProxiedRequestHandler(BaseHTTPRequestHandler):
 
         try:
             self.request.sendall(response)
-        except Exception, e:
-            print 'ERROR request relay: ',e
+        except Exception as e:
+            print('ERROR request relay: ',e)
 
     def do_GET(self):
         self.do_RELAY()

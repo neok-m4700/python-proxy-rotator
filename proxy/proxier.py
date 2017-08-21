@@ -25,7 +25,7 @@ class ProxyManager():
     
     def _load_proxies(self, _lock, _killer, check_for_tmp=True):
         if check_for_tmp and os.path.exists(os.path.join(gettempdir(),'py_http_proxies.txt')):
-            print 'Loading proxies from local tmp...'
+            print('Loading proxies from local tmp...')
             
             file = open(os.path.join(gettempdir(),'py_http_proxies.txt'),'r').readlines()
             for entry in file:
@@ -41,7 +41,7 @@ class ProxyManager():
                 self.https_proxies.append( entry )
                 _lock.release()
         else:
-            print 'Loading proxies from proxylist.txt ...'
+            print('Loading proxies from proxylist.txt ...')
             
             file = open(os.path.join(os.getcwd(),'proxy/proxylist.txt'),'r').readlines()
             dead = []
@@ -57,8 +57,8 @@ class ProxyManager():
                     _lock.release()
                 else: dead.append(entry)
     
-            print "Dead proxies: "
-            for d in dead: print d[0]
+            print("Dead proxies: ")
+            for d in dead: print(d[0])
         
             log = open(os.path.join(gettempdir(),'py_http_proxies.txt'),'w')
             _lock.acquire()
@@ -75,8 +75,8 @@ class ProxyManager():
             log.close()
         
         _lock.acquire()
-        print len(self.https_proxies),' HTTPS proxies with chain support'
-        print len(self.http_proxies),' HTTP proxies'
+        print(len(self.https_proxies),' HTTPS proxies with chain support')
+        print(len(self.http_proxies),' HTTP proxies')
         _lock.release()
         
     def _test_CONNECT(self, _socket, test_server='www.vg.no'):
@@ -96,7 +96,7 @@ class ProxyManager():
                     statuscode = int(statusline[1])
                     return (statuscode == 200)
             except socket.error: pass
-            except ValueError, e: print 'ERROR chaining: ',e
+            except ValueError as e: print('ERROR chaining: ',e)
         return False
     
     def _test_alive(self, _socket, server):
